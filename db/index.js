@@ -162,9 +162,9 @@ async function getAllPosts() {
       SELECT id
       FROM posts;
     `);
-    const posts = await Promise.all(postIds.map(
-        post => getPostById(post.id)
-    ));
+        const posts = await Promise.all(postIds.map(
+            post => getPostById(post.id)
+        ));
 
         return rows;
     } catch (error) {
@@ -205,18 +205,18 @@ async function createTags(tagList) {
 
     try {
         await client.query(`
-        INSERT INTO tags(name),
-        VALUES (${insertValues}),
-        ON CONFLICT (name) DO NOTHING`);
-        ([tagList]);
+        INSERT INTO tags(name)
+        VALUES (${insertValues})
+        ON CONFLICT (name) DO NOTHING`, tagList);
+
 
         // insert the tags, doing nothing on conflict
         // returning nothing, we'll query after
         const { rows } = await client.query(`
         SELECT * FROM tags
         WHERE name
-        IN (${selectValues}`);
-        ([tagList])
+        IN (${selectValues}`, tagList);
+
 
         // select all tags where the name is in our taglist
         // return the rows from the query
@@ -284,7 +284,7 @@ async function getPostsByTagName(tagName) {
     } catch (error) {
         throw error;
     }
-} 
+}
 
 module.exports = {
     client,
